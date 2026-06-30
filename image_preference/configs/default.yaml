@@ -1,0 +1,63 @@
+# Все настройки пайплайна в одном месте.
+# Пути (train_parquet/test_parquet/...) намеренно НЕ заданы здесь:
+# auto_config() сам подставит data/ локально или /kaggle/input на Kaggle.
+# Чтобы переопределить путь — просто добавь сюда ключ, он победит автодетект.
+
+# ----- извлечение признаков -----
+backbones:
+  - name: convnextv2_base.fcmae_ft_in22k_in1k_384
+    img_size: 384
+    batch_size: 48
+  - name: vit_large_patch14_clip_224.openai
+    img_size: 224
+    batch_size: 64
+use_tta_hflip: true
+num_workers: 4
+decode_threads: 8          # потоки параллельного декода картинок при извлечении фич
+pretrained: true
+
+# ----- Bradley-Terry голова -----
+bt_hidden: [1024, 256]
+bt_dropout: 0.3
+bt_lr: 0.001
+bt_weight_decay: 0.01
+bt_epochs: 40
+bt_batch_size: 256
+bt_patience: 6
+bt_swap_aug: true
+
+# ----- LightGBM голова -----
+use_gbdt: true
+gbdt_pair_mode: compact        # compact | full
+gbdt_early_stopping: 100
+lgbm_params:
+  objective: binary
+  metric: auc
+  learning_rate: 0.03
+  num_leaves: 63
+  feature_fraction: 0.5
+  bagging_fraction: 0.8
+  bagging_freq: 1
+  min_child_samples: 40
+  lambda_l2: 5.0
+  verbosity: -1
+  n_estimators: 2000
+
+# ----- кросс-валидация / ансамбль -----
+n_folds: 5
+seed: 42
+blend_search: true
+
+# ----- runtime -----
+device: cuda
+amp: true
+
+# ----- end-to-end файнтюн (опционально, выше потолок) -----
+finetune_enabled: false
+finetune_backbone: convnextv2_base.fcmae_ft_in22k_in1k_384
+finetune_img_size: 384
+finetune_epochs: 6
+finetune_lr: 0.00001
+finetune_head_lr: 0.001
+finetune_batch_size: 16
+finetune_freeze_epochs: 1

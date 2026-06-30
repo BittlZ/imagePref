@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Competition data (local / Kaggle input only)
+data/
+*.parquet
+
+# Pipeline outputs & feature cache
+work/
+image_preference/work/
+*.npy
+*.npz
+submission.csv
+
+# Model weights & checkpoints
+*.pth
+*.pt
+*.ckpt
+*.pkl
+*.joblib
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.env.*
+
+# Logs & temp
+*.log
+logs/
+tmp/
+temp/
+
+# Archives (e.g. Kaggle deploy zip)
+*.zip
+
+# Test / lint caches
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
